@@ -1,6 +1,6 @@
 <?php
 // dashboard.php
-require_once __DIR__ . '/includes/auth_check.php';  // Sjekk at bruker er logget inn
+require_once __DIR__ . '/includes/bootstrap.php'; // Sjekk at bruker er logget inn
 ?>
 <!DOCTYPE html>
 <html lang="no">
