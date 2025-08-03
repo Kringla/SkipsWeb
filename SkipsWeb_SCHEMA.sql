@@ -412,9 +412,9 @@ DROP TABLE IF EXISTS `tblzUser`;
 CREATE TABLE `tblzUser` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(100) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `role` enum('ADM','USR') NOT NULL DEFAULT 'USR',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `password` varchar(255) NOT NULL,
+  `role` enum('admin','user') NOT NULL DEFAULT 'USR',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

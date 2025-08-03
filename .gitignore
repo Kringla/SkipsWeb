@@ -1,1 +1,4 @@
 config/config.php
+.htaccess.php
+config/config.old.php
+error_log
