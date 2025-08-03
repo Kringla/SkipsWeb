@@ -1,12 +1,7 @@
 <?php
-// register.php
 require_once __DIR__ . '/config/config.php';
-if (!isset($conn) || !($conn instanceof mysqli)) {
-    die("Feil: Ingen databaseforbindelse funnet. Sjekk config.php!");
-}
-
 session_start();
-ini_set('display_errors',1);
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 $errors = [];
@@ -18,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirm  = $_POST['confirm_password'] ?? '';
     $role     = in_array($_POST['role'] ?? '', ['admin','user']) ? $_POST['role'] : 'user';
 
-    if (!$email)            $errors[] = 'Ugyldig e-post.';
-    if (empty($password))   $errors[] = 'Passord kan ikke være tomt.';
+    if (!$email)               $errors[] = 'Ugyldig e-post.';
+    if (empty($password))      $errors[] = 'Passord kan ikke være tomt.';
     if ($password !== $confirm) $errors[] = 'Passordene matcher ikke.';
 
-    // 2) Sjekk om e-post allerede finnes
+    // 2) Sjekk om e-post finnes
     if (empty($errors)) {
         $stmt = $conn->prepare("SELECT user_id FROM tblzUser WHERE email = ?");
         if (!$stmt) {
@@ -37,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
 
-    // 3) Sett inn ny bruker
+    // 3) Registrer bruker
     if (empty($errors)) {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $conn->prepare("
@@ -59,21 +54,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-<!-- HTML-skjema -->
-<h2>Registrer ny bruker</h2>
-<?php foreach ($errors as $e): ?>
-  <p class="error"><?= htmlspecialchars($e) ?></p>
-<?php endforeach; ?>
-<form method="post" action="">
-  <label>E-post:<input type="email" name="email" required></label><br>
-  <label>Passord:<input type="password" name="password" required></label><br>
-  <label>Bekreft passord:<input type="password" name="confirm_password" required></label><br>
-  <label>Rolle:
-    <select name="role">
-      <option value="user">Bruker</option>
-      <option value="admin">Administrator</option>
-    </select>
-  </label><br>
-  <button type="submit">Registrer</button>
-</form>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <title>Registrer</title>
+</head>
+<body>
+  <h2>Registrer ny bruker</h2>
+  <?php foreach ($errors as $e): ?>
+    <p class="error"><?= htmlspecialchars($e) ?></p>
+  <?php endforeach; ?>
+  <form method="post" action="">
+    <label>E-post:<input type="email" name="email" required></label><br>
+    <label>Passord:<input type="password" name="password" required></label><br>
+    <label>Bekreft passord:<input type="password" name="confirm_password" required></label><br>
+    <label>Rolle:
+      <select name="role">
+        <option value="user">Bruker</option>
+        <option value="admin">Administrator</option>
+      </select>
+    </label><br>
+    <button type="submit">Registrer</button>
+  </form>
+</body>
+</html>

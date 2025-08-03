@@ -25,6 +25,9 @@ skipsweb/
 ├── logout.php               # Utlogging
 ├── dashboard.php            # Hoveddashboard etter innlogging
 ├── .htaccess                # URL-omskriving, sikkerhetsregler
+├── minitest.php         	 # Tester bootstrap.php
+├── tilkoblingtest.php       # Tester tilkobling til db med connection string VELLYKKET TEST!!
+├── testdb.php               # Tester tilkobling via config.php
 │
 ├── config/
 │   └── config.php           # Database- og app-innstillinger
@@ -35,10 +38,6 @@ skipsweb/
 │   ├── header.php           # Felles HTML-head + åpning av <body>
 │   ├── footer.php           # Felles footerelementer + lukking av <body>
 │   └── functions.php        # Hjelfunksjoner (validering, formatering mv.)
-│
-├── tests/
-│   ├── minitest.php         # Tester bootstrap.php
-│   └── tikoblingtest.php    # Tester tilkobling til db med connection string
 │
 ├── user/
 │   ├── fartoy_sok.php       # Controller for søkeresultat
