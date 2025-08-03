@@ -1,7 +1,12 @@
 Prosjekt Kunnskaps Dokument (PKD)
 
 Prosjektets navn er SKIPSWEB
+Prosjektets relevante filer finnes på  https://github.com/Kringla/SkipsWeb
 
+Prosjektets styrende filer er:
+"SkipsWeb_PRD.txt" 		Overordnete krav og utviklingsplan
+"SkipsWeb_PKD.txt" 		Prosjektets styrende strukturer
+"SkipsWeb_SCHEMA.sql"  	Schema til SkipsDb
 
 RESSURSRAMMEBETINGELSER:
 DB som skal gis et GUI i prosjektet ligger på et Webhotell, OnNet.no.
@@ -45,7 +50,7 @@ skipsweb/
 │       ├── fartoy_sok_form.php     # Søkeskjema
 │       └── fartoy_sok_results.php  # Resultattabell
 
-I tillegg ligger denne filen (SkipsWeb_PKD.txt) og schema til SkipsDb i filen SkipsWeb_SCHEMA.sql i skipsweb/
+
 
 De finnes på  https://github.com/Kringla/SkipsWeb
 
