@@ -1,33 +1,17 @@
 <?php
-// dashboard.php
-require_once __DIR__ . '/includes/bootstrap.php'; // Sjekk at bruker er logget inn
+require_once __DIR__ . '/includes/bootstrap.php';
 ?>
-<!DOCTYPE html>
-<html lang="no">
-<head>
-  <meta charset="utf-8">
-  <title>Dashboard</title>
-</head>
-<body>
-  <?php
-    // Hent brukerinfo
-    session_start();
-    $userId = $_SESSION['user_id'] ?? '';
-    $role   = $_SESSION['role']    ?? '';
-  ?>
-  <h1>Velkommen til SKIPSWEB</h1>
-  <p>Du er logget inn som bruker-ID: <strong><?= htmlspecialchars($userId) ?></strong>
-     med rolle: <strong><?= htmlspecialchars($role) ?></strong>.</p>
+<?php include __DIR__ . '/includes/header.php'; ?>
+<?php include __DIR__ . '/includes/menu.php'; ?>
 
-  <nav>
-    <ul>
-      <li><a href="user/fartoy_sok.php">Søk fartøy</a></li>
-      <?php if ($role === 'ADM'): ?>
-        <li><a href="admin/fartoy_edit.php">Administrer fartøy</a></li>
-        <li><a href="admin/brukere.php">Administrer brukere</a></li>
-      <?php endif; ?>
-      <li><a href="logout.php">Logg ut</a></li>
-    </ul>
-  </nav>
-</body>
-</html>
+<div class="dashboard">
+    <h1>Velkommen til SkipsWeb</h1>
+    <p>Du er logget inn som <?php echo ($_SESSION['user_role'] === 'ADM' ? 'administrator' : 'bruker'); ?>.</p>
+    <?php if ($_SESSION['user_role'] === 'ADM'): ?>
+        <p>Som administrator kan du legge til, endre eller slette data og brukere.</p>
+    <?php else: ?>
+        <p>Som vanlig bruker kan du søke i og lese data.</p>
+    <?php endif; ?>
+</div>
+
+<?php include __DIR__ . '/includes/footer.php'; ?>

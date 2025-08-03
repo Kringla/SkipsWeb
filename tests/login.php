@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// resten av koden din følger her...
+
 require_once __DIR__ . '/includes/bootstrap.php';
 if (isset($_SESSION['user_id'])) {
     header('Location: /dashboard.php');
@@ -12,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $errors[] = 'Vennligst fyll inn alle felter.';
     } else {
-        $stmt = $conn->prepare("SELECT user_id, password, role FROM tblzUser WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -20,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Sjekk passordhash
             if (password_verify($password, $row['password'])) {
                 // Innlogging vellykket
-                $_SESSION['user_id']   = $row['user_id'];
+                $_SESSION['user_id']   = $row['id'];
                 $_SESSION['user_email'] = $email;
                 $_SESSION['user_role']  = $row['role'];
                 // Send til riktig side basert på rolle

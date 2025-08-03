@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
         // Sjekk om e-post allerede finnes
-        $stmt = $conn->prepare("SELECT user_id FROM tblzUuser WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$errors) {
         // Hash passordet før lagring
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO tblzUser (email, password, role) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $email, $hash, $role);
         if ($stmt->execute()) {
             // Vellykket registrering – send bruker til innlogging

@@ -1,0 +1,67 @@
+Prosjekt Kunnskaps Dokument (PKD)
+
+Prosjektets navn er SKIPSWEB
+
+
+RESSURSRAMMEBETINGELSER:
+DB som skal gis et GUI i prosjektet ligger på et Webhotell, OnNet.no.
+Webhotellet har MySQL ver 8.3.28 og støtter Cron.
+Jeg har en MSc i "Design of Information Systems" fra 1980. Jeg har utviklet applikajoner i og kan lese VBA kode. Jeg har god erfaring med design av Relasjonsdatabaser.
+Jeg har tilgjengelig VB Studio Code, Notebook++, Access, phpMySQL ver 5.2.2, MySQL Workbench ver 8.0 CE og Laragon.
+
+DB har et Schema som angitt i "SkipsWeb.sql" fil.
+
+Data for connection string: vertsnavn (host): host.onnet.no 
+databasenavn: gerhard_skip
+brukernavn (MySQL-konto): gerhard_skipsweb
+passord: 5!Ling?#
+port: 3306
+charset: utf8mb4 (behøves ikke for connection)
+
+php-filene (så langt) er arrangert i følgende struktur:
+skipsweb/
+├── register.php             # Brukerregistrering
+├── login.php                # Innlogging
+├── logout.php               # Utlogging
+├── dashboard.php            # Hoveddashboard etter innlogging
+├── .htaccess                # URL-omskriving, sikkerhetsregler
+│
+├── config/
+│   └── config.php           # Database- og app-innstillinger
+│
+├── includes/
+│   ├── bootstrap.php        # Laster config, session, auth, logger, db
+│   ├── menu.php             # Navigasjon (dashboard)
+│   ├── header.php           # Felles HTML-head + åpning av <body>
+│   ├── footer.php           # Felles footerelementer + lukking av <body>
+│   └── functions.php        # Hjelfunksjoner (validering, formatering mv.)
+│
+├── tests/
+│   ├── minitest.php         # Tester bootstrap.php
+│   └── tikoblingtest.php    # Tester tilkobling til db med connection string
+│
+├── user/
+│   ├── fartoy_sok.php       # Controller for søkeresultat
+│   └── views/
+│       ├── fartoy_sok_form.php     # Søkeskjema
+│       └── fartoy_sok_results.php  # Resultattabell
+
+I tillegg ligger denne filen (SkipsWeb_PKD.txt) og schema til SkipsDb i filen SkipsWeb_SCHEMA.sql i skipsweb/
+
+De finnes på  https://github.com/Kringla/SkipsWeb
+
+MANUELLE TESTER
+Under følger en punkt-for-punkt-sjekk med forventet utfall. Gjøres i første omgang med Chrome.
+
+Nr	Side							Handling / input								Forventet resultat
+A1	/register.php					Registrer ny bruker (ADM+USR)					Skjema valideres, ny rad i users-tabellen, redirect til login.php
+A2	/login.php		 				Logg inn som ADM / USR							ADM → dashboard.php, USR → fartøy-søk (eller dashboard)
+A3	/logout.php						Klikk “Logg ut”									Sesjon ødelagt, redirect til login.php
+B1	/dashboard.php					Åpnes uten innlogging							Skal redirecte til login.php
+B2	/dashboard.php (ADM)			Åpnes som ADM									Viser meny (inkl. lenke til søk og senere CRUD)
+B3	/dashboard.php (USR)			Åpnes som USR									Viser meny uten CRUD-lenker
+C1	/user/fartoy_sok.php			Tomt søk										Viser tomt resultat eller hjelpetekst
+C2	/user/fartoy_sok_form.php		Søk på eksakt båt-ID eller delstreng i navn		Viser treff-tabell med korrekt kolonner og data
+C3	/user/fartoy_sok_results.php	Klikk på båt-rad								Viser detaljer (navnehistorikk, spesifikasjoner)
+D1	Feilhåndtering					Slå av DB-tilgang (skriv feil passord)			Får veldefinert “Internal server error” (500) og logg
+D2	Ugyldige parameter				Send script uten ?id=… eller med ?id=99999		Viser “Ingen data” eller “Invalid ID” uten PHP-error
