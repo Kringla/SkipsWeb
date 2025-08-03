@@ -9,6 +9,6 @@ function is_valid_id($id) {
 }
 
 function isAdmin() {
-    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ADM';
+    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 }
 ?>
