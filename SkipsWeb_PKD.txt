@@ -31,8 +31,8 @@ skipsweb/
 ├── dashboard.php            # Hoveddashboard etter innlogging
 ├── .htaccess                # URL-omskriving, sikkerhetsregler
 ├── minitest.php         	 # Tester bootstrap.php
-├── tilkoblingtest.php       # Tester tilkobling til db med connection string VELLYKKET TEST!!
-├── testdb.php               # Tester tilkobling via config.php
+├── tilkoblingtest.php       # Tester tilkobling til db med connection string VELLYKKET TEST VELLYKKET TEST 03.08.25 kl 12:04 UTC
+├── testdb.php               # Tester tilkobling via config.php VELLYKKET TEST 03.08.25 kl 13:04 UTC
 │
 ├── config/
 │   └── config.php           # Database- og app-innstillinger
@@ -58,12 +58,12 @@ MANUELLE TESTER
 Under følger en punkt-for-punkt-sjekk med forventet utfall. Gjøres i første omgang med Chrome.
 
 Nr	Side							Handling / input								Forventet resultat
-A1	/register.php					Registrer ny bruker (ADM+USR)					Skjema valideres, ny rad i users-tabellen, redirect til login.php
-A2	/login.php		 				Logg inn som ADM / USR							ADM → dashboard.php, USR → fartøy-søk (eller dashboard)
+A1	/register.php					Registrer ny bruker (admin+user)					OK: Skjema valideres, ny rad i users-tabellen, redirect til login.php
+A2	/login.php		 				Logg inn som admin / user							OK: admin → dashboard.php, user → fartøy-søk (eller dashboard)
 A3	/logout.php						Klikk “Logg ut”									Sesjon ødelagt, redirect til login.php
 B1	/dashboard.php					Åpnes uten innlogging							Skal redirecte til login.php
-B2	/dashboard.php (ADM)			Åpnes som ADM									Viser meny (inkl. lenke til søk og senere CRUD)
-B3	/dashboard.php (USR)			Åpnes som USR									Viser meny uten CRUD-lenker
+B2	/dashboard.php (admin)			Åpnes som admin									Viser meny (inkl. lenke til søk og senere CRUD)
+B3	/dashboard.php (user)			Åpnes som user									Viser meny uten CRUD-lenker
 C1	/user/fartoy_sok.php			Tomt søk										Viser tomt resultat eller hjelpetekst
 C2	/user/fartoy_sok_form.php		Søk på eksakt båt-ID eller delstreng i navn		Viser treff-tabell med korrekt kolonner og data
 C3	/user/fartoy_sok_results.php	Klikk på båt-rad								Viser detaljer (navnehistorikk, spesifikasjoner)

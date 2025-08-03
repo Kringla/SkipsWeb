@@ -20,7 +20,7 @@ $script = basename($_SERVER['SCRIPT_NAME'] ?? '');
 $publicPages = ['login.php', 'register.php', 'logout.php'];
 if (!in_array($script, $publicPages)) {
     if (empty($_SESSION['user_id'])) {
-        header('Location: /login.php');
+        header(header('Location: ' . BASE_URL . '/login.php'););
         exit;
     }
 }

@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmt->bind_param("sss", $email, $hash, $role);
         if ($stmt->execute()) {
-            header('Location: login.php');
+            header('Location: ' . BASE_URL . '/login.php');
             exit;
         } else {
             $errors[] = 'Kunne ikke registrere bruker.';
