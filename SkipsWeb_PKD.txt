@@ -4,9 +4,10 @@ Prosjektets navn er SKIPSWEB
 Prosjektets relevante filer finnes på  https://github.com/Kringla/SkipsWeb
 
 Prosjektets styrende filer er:
-"SkipsWeb_PRD.txt" 		Overordnete krav og utviklingsplan
-"SkipsWeb_PKD.txt" 		Prosjektets styrende strukturer
-"SkipsWeb_SCHEMA.sql"  	Schema til SkipsDb
+"SkipsWeb_PRD.txt" 			Overordnete krav og utviklingsplan
+"SkipsWeb_PKD.txt" 			Prosjektets styrende strukturer
+"SkipsWeb_templ_sok.xlsx	Definisjon av krav til søke templates
+"SkipsWeb_SCHEMA.sql"  		Schema til SkipsDb
 
 RESSURSRAMMEBETINGELSER:
 DB som skal gis et GUI i prosjektet ligger på et Webhotell, OnNet.no.
