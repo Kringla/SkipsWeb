@@ -61,11 +61,11 @@ Nr	Side							Handling / input								Forventet resultat
 A1	/register.php					Registrer ny bruker (admin+user)			OK: Skjema valideres, ny rad i users-tabellen, redirect til login.php
 A2	/login.php		 				Logg inn som admin / user					OK: admin → dashboard.php, user → fartøy-søk (eller dashboard)
 A3	/logout.php						Klikk “Logg ut”								OK:	Sesjon ødelagt, redirect til login.php
-B1	/dashboard.php					Åpnes uten innlogging							Skal redirecte til login.php
-B2	/dashboard.php (admin)			Åpnes som admin									Viser meny (inkl. lenke til søk og senere CRUD)
-B3	/dashboard.php (user)			Åpnes som user									Viser meny uten CRUD-lenker
-C1	/user/fartoy_sok.php			Tomt søk										Viser tomt resultat eller hjelpetekst
-C2	/user/fartoy_sok_form.php		Søk på eksakt båt-ID eller delstreng i navn		Viser treff-tabell med korrekt kolonner og data
+B1	/dashboard.php					Åpnes uten innlogging						OK:	Skal redirecte til login.php
+B2	/dashboard.php (admin)			Åpnes som admin								OK:	Viser meny (inkl. lenke til søk og senere CRUD)
+B3	/dashboard.php (user)			Åpnes som user								OK:	Viser meny uten CRUD-lenker
+C1	/user/fartoy_sok.php			Tomt søk									OK:	Viser tomt resultat eller hjelpetekst
+C2	/user/fartoy_sok_form.php		Søk på eksakt båt-ID eller delstreng i navn	OK:	Viser treff-tabell med korrekt kolonner og data
 C3	/user/fartoy_sok_results.php	Klikk på båt-rad								Viser detaljer (navnehistorikk, spesifikasjoner)
-D1	Feilhåndtering					Slå av DB-tilgang (skriv feil passord)			Får veldefinert “Internal server error” (500) og logg
-D2	Ugyldige parameter				Send script uten ?id=… eller med ?id=99999		Viser “Ingen data” eller “Invalid ID” uten PHP-error
+D1	Feilhåndtering					Slå av DB-tilgang (skriv feil passord)		OK: Får veldefinert “Internal server error” (500) og logg
+D2	Ugyldige parameter				Send script uten ?id=… eller med ?id=99999	OK:	Viser “Ingen data” eller “Invalid ID” uten PHP-error

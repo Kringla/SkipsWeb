@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id']    = $user_id;
             $_SESSION['user_email'] = $email;
             $_SESSION['user_role']  = $role;
-            header('Location: ' . BASE_URL . '/login.php');
+            header('Location: ' . BASE_URL . '/dashboard.php');
             exit;
         } else {
             $errors[] = 'Feil e-post eller passord.';
