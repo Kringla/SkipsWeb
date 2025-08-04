@@ -66,6 +66,6 @@ B2	/dashboard.php (admin)			Åpnes som admin								OK:	Viser meny (inkl. lenke 
 B3	/dashboard.php (user)			Åpnes som user								OK:	Viser meny uten CRUD-lenker
 C1	/user/fartoy_sok.php			Tomt søk									OK:	Viser tomt resultat eller hjelpetekst
 C2	/user/fartoy_sok_form.php		Søk på eksakt båt-ID eller delstreng i navn	OK:	Viser treff-tabell med korrekt kolonner og data
-C3	/user/fartoy_sok_results.php	Klikk på båt-rad								Viser detaljer (navnehistorikk, spesifikasjoner)
+C3	/user/fartoy_sok_results.php	Klikk på båt-rad							OK:	Viser detaljer (navnehistorikk, spesifikasjoner)
 D1	Feilhåndtering					Slå av DB-tilgang (skriv feil passord)		OK: Får veldefinert “Internal server error” (500) og logg
 D2	Ugyldige parameter				Send script uten ?id=… eller med ?id=99999	OK:	Viser “Ingen data” eller “Invalid ID” uten PHP-error
