@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 require_once __DIR__ . '/../config/config.php';
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -20,7 +22,8 @@ $script = basename($_SERVER['SCRIPT_NAME'] ?? '');
 $publicPages = ['login.php', 'register.php', 'logout.php'];
 if (!in_array($script, $publicPages)) {
     if (empty($_SESSION['user_id'])) {
-        header(header('Location: ' . BASE_URL . '/login.php'););
+        // Riktig redirect-syntaks:
+        header('Location: ' . BASE_URL . '/login.php');
         exit;
     }
 }

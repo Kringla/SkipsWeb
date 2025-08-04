@@ -58,9 +58,9 @@ MANUELLE TESTER
 Under følger en punkt-for-punkt-sjekk med forventet utfall. Gjøres i første omgang med Chrome.
 
 Nr	Side							Handling / input								Forventet resultat
-A1	/register.php					Registrer ny bruker (admin+user)					OK: Skjema valideres, ny rad i users-tabellen, redirect til login.php
-A2	/login.php		 				Logg inn som admin / user							OK: admin → dashboard.php, user → fartøy-søk (eller dashboard)
-A3	/logout.php						Klikk “Logg ut”									Sesjon ødelagt, redirect til login.php
+A1	/register.php					Registrer ny bruker (admin+user)			OK: Skjema valideres, ny rad i users-tabellen, redirect til login.php
+A2	/login.php		 				Logg inn som admin / user					OK: admin → dashboard.php, user → fartøy-søk (eller dashboard)
+A3	/logout.php						Klikk “Logg ut”								OK:	Sesjon ødelagt, redirect til login.php
 B1	/dashboard.php					Åpnes uten innlogging							Skal redirecte til login.php
 B2	/dashboard.php (admin)			Åpnes som admin									Viser meny (inkl. lenke til søk og senere CRUD)
 B3	/dashboard.php (user)			Åpnes som user									Viser meny uten CRUD-lenker
