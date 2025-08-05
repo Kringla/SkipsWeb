@@ -12,6 +12,9 @@ require_once __DIR__ . '/includes/bootstrap.php';
     <?php else: ?>
         <p>Som vanlig bruker kan du søke i og lese data.</p>
     <?php endif; ?>
+
+    <!-- Lenke til S1-Fartøy -->
+    <p><a href="user/search_fartoy.php">Finn fartøy</a></p>
 </div>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

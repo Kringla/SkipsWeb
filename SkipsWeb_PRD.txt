@@ -44,8 +44,8 @@ Sesjonsstyring for brukerroller (admin / user)
 Mål: Brukergrensesnitt for lesetilgang.
 *Adgang til DB bekreftet.
 En nettside for søk og lesing av fartøy (tblFartObj + tilhørende navn, spesifikasjoner og historikk)
-Standard søketemplates (skal defineres når trinnet startes)
-Enkelt søkefelt og resultattabell
+Standard søketemplates (definert i "SkipsWeb_templ_sok.xlsx")
+Søkefelt og resultattabell
 Kun lesetilgang
 
 # TRINN 3 – Full CRUD for administrator (admin)
