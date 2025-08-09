@@ -63,7 +63,7 @@ CREATE TABLE `tblFartObj` (
   `StroketYear` smallint DEFAULT NULL,
   `StroketID` int DEFAULT NULL,
   `ObjNotater` mediumtext,
-  `IngenData` bit(1) DEFAULT NULL,
+  `IngenData` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`FartObj_ID`),
   KEY `LeverID` (`LeverID`),
   KEY `SkrogID` (`SkrogID`),
@@ -111,7 +111,7 @@ CREATE TABLE `tblFartSpes` (
   `Tonnasje` varchar(255) DEFAULT NULL,
   `Drektigh` varchar(255) DEFAULT NULL,
   `TonnEnh_ID` int DEFAULT NULL,
-  `Objekt` bit(1) DEFAULT NULL,
+  `Objekt` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`FartSpes_ID`),
   KEY `FartObj_ID` (`FartObj_ID`),
   KEY `Verft_ID` (`Verft_ID`),
@@ -137,16 +137,16 @@ CREATE TABLE `tblFartTid` (
   `FartObj_ID` int DEFAULT NULL,
   `FartNavn_ID` int DEFAULT NULL,
   `FartSpes_ID` int DEFAULT NULL,
-  `Objekt` bit(1) DEFAULT NULL,
+  `Objekt` tinyint(1) DEFAULT NULL,
   `Rederi` varchar(255) DEFAULT NULL,
   `Nasjon_ID` int DEFAULT NULL,
   `RegHavn` varchar(50) DEFAULT NULL,
   `MMSI` varchar(15) DEFAULT NULL,
   `Kallesignal` varchar(15) DEFAULT NULL,
   `Fiskerinr` varchar(255) DEFAULT NULL,
-  `Navning` bit(1) DEFAULT NULL,
-  `Eierskifte` bit(1) DEFAULT NULL,
-  `Annet` bit(1) DEFAULT NULL,
+  `Navning` tinyint(1) DEFAULT NULL,
+  `Eierskifte` tinyint(1) DEFAULT NULL,
+  `Annet` tinyint(1) DEFAULT NULL,
   `Hendelse` varchar(255) DEFAULT NULL,
   `Historie` mediumtext,
   PRIMARY KEY (`FartTid_ID`),
@@ -247,7 +247,7 @@ DROP TABLE IF EXISTS `tblzFartFunk`;
 CREATE TABLE `tblzFartFunk` (
   `FartFunk_ID` int NOT NULL AUTO_INCREMENT,
   `TypeFunksjon` varchar(255) DEFAULT NULL,
-  `FunkDet` bit(1) DEFAULT NULL,
+  `FunkDet` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`FartFunk_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -261,7 +261,7 @@ DROP TABLE IF EXISTS `tblzFartKlasse`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tblzFartKlasse` (
   `FartKlasse_ID` int NOT NULL AUTO_INCREMENT,
-  `Klasse` bit(1) DEFAULT NULL,
+  `Klasse` tinyint(1) DEFAULT NULL,
   `TypeKlasse` varchar(255) DEFAULT NULL,
   `TypeKlasseNavn` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`FartKlasse_ID`)
@@ -414,7 +414,9 @@ CREATE TABLE `tblzUser` (
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('admin','user') NOT NULL DEFAULT 'USR',
+  `isactive` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastused` datetime NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

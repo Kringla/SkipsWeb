@@ -1,20 +1,32 @@
 <?php
 require_once __DIR__ . '/includes/bootstrap.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ' . BASE_URL . '/login.php');
+    exit;
+}
+
+include __DIR__ . '/includes/header.php';
+include __DIR__ . '/includes/menu.php';
 ?>
-<?php include __DIR__ . '/includes/header.php'; ?>
-<?php include __DIR__ . '/includes/menu.php'; ?>
 
 <div class="dashboard">
     <h1>Velkommen til SkipsWeb</h1>
-    <p>Du er logget inn som <?php echo ($_SESSION['user_role'] === 'admin' ? 'administrator' : 'bruker'); ?>.</p>
-    <?php if ($_SESSION['user_role'] === 'admin'): ?>
+    <p>Du er logget inn som 
+        <?php 
+        echo (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') 
+            ? 'administrator' 
+            : 'bruker'; 
+        ?>.
+    </p>
+
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
         <p>Som administrator kan du legge til, endre eller slette data og brukere.</p>
     <?php else: ?>
         <p>Som vanlig bruker kan du søke i og lese data.</p>
     <?php endif; ?>
 
-    <!-- Lenke til S1-Fartøy -->
-    <p><a href="user/search_fartoy.php">Finn fartøy</a></p>
+    <p><a href="<?= BASE_URL ?>/user/search_fartoy.php">Finn fartøy</a></p>
 </div>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

@@ -1,2 +1,2 @@
 <?php
-define('BASE_URL', 'http://localhost/skipsweb'); // Endre til produksjonsadresse når aktuelt
+define('BASE_URL', 'https://skipsweb.no'); // Endre til produksjonsadresse når aktuelt

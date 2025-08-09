@@ -1,81 +1,28 @@
 <?php
-require_once __DIR__ . '/config/config.php';
-session_start();
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+require_once __DIR__ . '/includes/bootstrap.php';
 
-$errors = [];
+$count = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
+if ($count > 0) {
+    header("Location: " . BASE_URL . "/login.php");
+    exit;
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 1) Valider input
-    $email   = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-    $password = $_POST['password'] ?? '';
-    $confirm  = $_POST['confirm_password'] ?? '';
-    $role     = in_array($_POST['role'] ?? '', ['admin','user']) ? $_POST['role'] : 'user';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST["email"];
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $role = "admin";
 
-    if (!$email)               $errors[] = 'Ugyldig e-post.';
-    if (empty($password))      $errors[] = 'Passord kan ikke være tomt.';
-    if ($password !== $confirm) $errors[] = 'Passordene matcher ikke.';
+    $stmt = $conn->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $email, $password, $role);
+    $stmt->execute();
 
-    // 2) Sjekk om e-post finnes
-    if (empty($errors)) {
-        $stmt = $conn->prepare("SELECT user_id FROM tblzUser WHERE email = ?");
-        if (!$stmt) {
-            die("Database-feil (prepare): " . $conn->error);
-        }
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows > 0) {
-            $errors[] = 'E-postadressen er allerede registrert.';
-        }
-        $stmt->close();
-    }
-
-    // 3) Registrer bruker
-    if (empty($errors)) {
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("
-            INSERT INTO tblzUser (email, password, role)
-            VALUES (?, ?, ?)
-        ");
-        if (!$stmt) {
-            die("Database-feil (prepare insert): " . $conn->error);
-        }
-        $stmt->bind_param("sss", $email, $hash, $role);
-        if ($stmt->execute()) {
-            header('Location: ' . BASE_URL . '/login.php');
-            exit;
-        } else {
-            $errors[] = 'Kunne ikke registrere bruker.';
-            error_log("Failed to register user $email: " . $stmt->error);
-        }
-        $stmt->close();
-    }
+    header("Location: " . BASE_URL . "/login.php");
+    exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="no">
-<head>
-  <meta charset="utf-8">
-  <title>Registrer</title>
-</head>
-<body>
-  <h2>Registrer ny bruker</h2>
-  <?php foreach ($errors as $e): ?>
-    <p class="error"><?= htmlspecialchars($e) ?></p>
-  <?php endforeach; ?>
-  <form method="post" action="">
-    <label>E-post:<input type="email" name="email" required></label><br>
-    <label>Passord:<input type="password" name="password" required></label><br>
-    <label>Bekreft passord:<input type="password" name="confirm_password" required></label><br>
-    <label>Rolle:
-      <select name="role">
-        <option value="user">Bruker</option>
-        <option value="admin">Administrator</option>
-      </select>
-    </label><br>
-    <button type="submit">Registrer</button>
-  </form>
-</body>
-</html>
+
+<form method="post" action="">
+    <input type="email" name="email" required placeholder="E-post">
+    <input type="password" name="password" required placeholder="Passord">
+    <button type="submit">Registrer administrator</button>
+</form>

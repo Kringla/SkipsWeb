@@ -36,7 +36,7 @@ Mål: Etablere grunnlaget for utvikling, inkludert tilgangskontroll.
 Backend: PHP 8.3.x (fordi det støttes av webhotellet)
 Database: MySQL 8.3.28 (eksisterende)
 Frontend: HTML, CSS (enkelt), og litt JavaScript (validering, interaktivitet)
-Autentisering: users-tabell med feltene user_id, email, password_hash, role (admin eller user), created_at
+Autentisering: users-tabell med feltene user_id, email, password, role (admin eller user), isactive, created_at, lastused
 Påloggingsside (login.php) og utlogging
 Sesjonsstyring for brukerroller (admin / user)
 
@@ -44,26 +44,11 @@ Sesjonsstyring for brukerroller (admin / user)
 Mål: Brukergrensesnitt for lesetilgang.
 *Adgang til DB bekreftet.
 En nettside for søk og lesing av fartøy (tblFartObj + tilhørende navn, spesifikasjoner og historikk)
-Standard søketemplates (definert i "SkipsWeb_templ_sok.xlsx")
+Standard søketemplates (definert i "Søksdefinisjoner.txt")
 Søkefelt og resultattabell
 Kun lesetilgang
+Ferdig testet
 
-# TRINN 3 – Full CRUD for administrator (admin)
-Mål: Gi admin full kontroll over databasetabellene
-
-Grensesnitt for:
-Legge til ny båt (inkl. navnehistorikk og spesifikasjoner), samt endringer
-Endre/slette eksisterende data
-Legge til/slette brukere
-Valgmeny med lenker til CRUD-sider for relevante tabeller
-
-# TRINN 4 – Testing og enkel logging
-Mål: Robusthet og sporbarhet
-Feilmeldinger vises på skjerm i utviklingsmodus
-Enkel loggfil for innlogging og endringer
-
-# TRINN 5 – Distribusjon og dokumentasjon
-Mål: Klargjøre for bruk og vedlikehold
-Instruksjoner for opplasting til webhotell
-Dokumentasjon for bruk og administrasjon
-Readme for utvikling og vedlikehold
+# TRINN 3 – Utseende
+Utseende landingsside
+CSS utvikling

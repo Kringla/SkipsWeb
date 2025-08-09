@@ -1,11 +1,11 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../config/config.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 
 // Koble til databasen (MySQLi) med feilhåndtering
 mysqli_report(MYSQLI_REPORT_OFF);
