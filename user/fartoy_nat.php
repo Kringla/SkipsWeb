@@ -4,139 +4,159 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
 
+// Små helpers
+if (!function_exists('h')) {
+    function h($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
+}
+function val($arr, $key, $def='') { return isset($arr[$key]) ? $arr[$key] : $def; }
+
 $nasjonId = isset($_GET['nasjon_id']) ? (int)$_GET['nasjon_id'] : 0; // 0 = alle
 $q        = isset($_GET['q']) ? trim($_GET['q']) : '';
 
-/** Hent nasjoner til dropdown */
+// Nasjoner til dropdown
 $nasjoner = [];
-$res = $conn->query("SELECT Nasjon_ID, Nasjon FROM tblzNasjon ORDER BY Nasjon");
-if ($res) {
-    while ($row = $res->fetch_assoc()) {
-        $nasjoner[] = $row;
-    }
+if ($res = $conn->query("SELECT Nasjon_ID, Nasjon FROM tblzNasjon ORDER BY Nasjon")) {
+    while ($row = $res->fetch_assoc()) { $nasjoner[] = $row; }
     $res->free();
 }
-// Input
-$nasjonId = isset($_GET['nasjon_id']) ? (int)$_GET['nasjon_id'] : 0; // 0 = alle
-$q        = isset($_GET['q']) ? trim($_GET['q']) : '';
 
-// Ny spørring: nyeste status pr. fartøy + ønskede felter
-$sql = "
-WITH latest_tid AS (
-  SELECT t.*,
-         ROW_NUMBER() OVER (
-           PARTITION BY t.FartObj_ID
-           ORDER BY t.YearTid DESC, t.MndTid DESC, t.FartTid_ID DESC
-         ) AS rn
-  FROM tblFartTid t
-),
-latest_name AS (
-  /* Foretrekk navnet som matcher nyeste tidslinje hvis tilgjengelig,
-     ellers fall-back til høyeste FartNavn_ID for objektet */
-  SELECT fn.FartObj_ID,
-         COALESCE(
-           fn2.FartNavn, 
-           (SELECT fn3.FartNavn 
-            FROM tblFartNavn fn3 
-            WHERE fn3.FartObj_ID = fn.FartObj_ID 
-            ORDER BY fn3.FartNavn_ID DESC LIMIT 1)
-         ) AS FartNavn
-  FROM tblFartNavn fn
-  LEFT JOIN latest_tid lt2 
-         ON lt2.FartObj_ID = fn.FartObj_ID AND lt2.rn = 1 AND lt2.FartNavn_ID = fn.FartNavn_ID
-  LEFT JOIN tblFartNavn fn2
-         ON fn2.FartNavn_ID = lt2.FartNavn_ID
-  GROUP BY fn.FartObj_ID
-)
-SELECT
-  o.FartObj_ID,
-  ft.TypeFork,                                     -- TypeFork
-  ln.FartNavn,                                     -- FartNavn (nyeste hvis mulig)
-  lt.RegHavn,                                      -- RegHavn (nyeste)
-  n.Nasjon,                                        -- Nasjon (nyeste)
-  o.Bygget,                                        -- Bygget
-  lt.Kallesignal,                                  -- Kallesignal (nyeste)
-  lt.Rederi                                         -- Rederi (nyeste)
-FROM tblFartObj o
-LEFT JOIN latest_tid lt      ON lt.FartObj_ID = o.FartObj_ID AND lt.rn = 1
-LEFT JOIN tblzNasjon n       ON n.Nasjon_ID   = lt.Nasjon_ID
-LEFT JOIN tblzFartType ft    ON ft.FartType_ID= o.FartType_ID
-LEFT JOIN latest_name ln     ON ln.FartObj_ID = o.FartObj_ID
-WHERE (? = 0 OR lt.Nasjon_ID = ?)
-  AND (? = '' OR ln.FartNavn LIKE CONCAT('%', ?, '%') OR o.NavnObj LIKE CONCAT('%', ?, '%'))
-ORDER BY COALESCE(ln.FartNavn, o.NavnObj), o.FartObj_ID
-LIMIT 200
-";
+// Kjør søk bare når bruker har trykket Søk (eller sendt noen parametre)
+$doSearch = ($_GET !== []);
 
-$stmt = $conn->prepare($sql);
-if (!$stmt) { die("Prepare feilet: " . $conn->error); }
+// Resultater
+$rows = [];
+if ($doSearch) {
+    $sql = "
+    SELECT
+      fn.FartNavn_ID,
+      ft.TypeFork,
+      fn.FartNavn,
+      fn.FartType_ID,
+      fn.PennantTiln,
+      curr.FartTid_ID,
+      curr.FartObj_ID              AS FartObj_ID,
+      curr.YearTid,
+      curr.MndTid,
+      curr.Rederi,
+      curr.RegHavn,
+      curr.Kallesignal,
+      curr.Nasjon_ID               AS TNat,
+      n.Nasjon,
+      curr.Objekt                  AS IsOriginalNow,
+      o.Bygget                     AS Bygget
+    FROM tblFartNavn AS fn
+    LEFT JOIN tblzFartType AS ft
+      ON ft.FartType_ID = fn.FartType_ID
+    LEFT JOIN tblFartTid AS curr
+      ON curr.FartTid_ID = (
+         SELECT t2.FartTid_ID
+         FROM tblFartTid t2
+         WHERE t2.FartNavn_ID = fn.FartNavn_ID
+         ORDER BY t2.YearTid DESC, t2.MndTid DESC, t2.FartTid_ID DESC
+         LIMIT 1
+      )
+    LEFT JOIN tblzNasjon AS n
+      ON n.Nasjon_ID = curr.Nasjon_ID
+    LEFT JOIN tblFartTid AS ot
+      ON ot.FartNavn_ID = fn.FartNavn_ID AND ot.Objekt = 1
+    LEFT JOIN tblFartObj AS o
+      ON o.FartObj_ID = ot.FartObj_ID
+    WHERE curr.FartTid_ID IS NOT NULL
+      AND (? = 0 OR curr.Nasjon_ID = ?)
+      AND (? = '' OR fn.FartNavn LIKE CONCAT('%', ?, '%'))
+    ORDER BY fn.FartNavn ASC
+    LIMIT 200
+    ";
 
-// 2 ints (nasjonId, nasjonId) + 3 strings (q, q, q)
-$stmt->bind_param('iisss', $nasjonId, $nasjonId, $q, $q, $q);
-$stmt->execute();
-$result = $stmt->get_result();
-$rows = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
-$stmt->close();
-
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) { die('Prepare feilet: ' . $conn->error); }
+    $stmt->bind_param('iiss', $nasjonId, $nasjonId, $q, $q);
+    if (!$stmt->execute()) { die('Execute feilet: ' . $stmt->error); }
+    $result = $stmt->get_result();
+    if ($result) {
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        $result->free();
+    }
+    $stmt->close();
+}
 ?>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 <?php include __DIR__ . '/../includes/menu.php'; ?>
 
-<div class="search-page">
-  <h2>Søk fartøy pr. nasjon</h2>
-
-  <form method="get" action="">
-    <label for="nasjon_id">Nasjon:</label>
-    <select name="nasjon_id" id="nasjon_id">
-      <option value="0"<?php echo $nasjonId===0?' selected':''; ?>>Alle</option>
+<div class="container">
+  <h1>Fartøy i databasen</h1>
+  <div style="margin:-0.25rem 0 0.75rem 0; font-size:0.95rem; color:#555;">
+    <strong>Forklaring:</strong>
+    <span title="Navnet tilhører opprinnelig fartøy" aria-hidden="true" style="font-size:1.1rem; vertical-align:baseline;">•</span>
+    = navnet tilhører <em>opprinnelig</em> fartøy (Objekt = 1).
+  </div>
+  <form method="get" class="form-inline" style="margin-bottom:1rem">
+    <label for="q">Søk på del av fartøynamn:&nbsp;</label>
+    <input type="text" id="q" name="q" value="<?= h($q) ?>" />
+    &nbsp;&nbsp;
+    <label for="nasjon_id">Nasjon:&nbsp;</label>
+    <select id="nasjon_id" name="nasjon_id">
+      <option value="0"<?= $nasjonId===0?' selected':'' ?>Alle</option>
       <?php foreach ($nasjoner as $n): ?>
-        <option value="<?php echo (int)$n['Nasjon_ID']; ?>"<?php echo ($nasjonId==(int)$n['Nasjon_ID'])?' selected':''; ?>>
-          <?php echo htmlspecialchars($n['Nasjon']); ?>
+        <option value="<?= (int)$n['Nasjon_ID'] ?>"<?= ($nasjonId==(int)$n['Nasjon_ID'])?' selected':'' ?>
+          <?= h($n['Nasjon']) ?>
         </option>
       <?php endforeach; ?>
     </select>
-
-    <label for="q">Navn (delstreng):</label>
-    <input type="text" id="q" name="q" value="<?php echo htmlspecialchars($q); ?>" placeholder="F.eks. 'fjord'">
-
+    &nbsp;&nbsp;
     <button type="submit">Søk</button>
   </form>
 
+  <?php if ($doSearch): ?>
+    <p>Antall funnet: <strong><?= count($rows) ?></strong></p>
+  <?php endif; ?>
+
   <?php if ($rows): ?>
-  <p>Fant <?php echo count($rows); ?> fartøy (viser maks 200).</p>
-  <table border="1" cellpadding="6" cellspacing="0">
+  <table class="table table-striped table-sm" border="1" cellspacing="0" cellpadding="4">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Fartøynavn</th>
+        <th>Navn</th>
         <th>Reg.havn</th>
-        <th>Nasjon</th>
+        <th>Flaggstat</th>
         <th>Bygget</th>
         <th>Kallesignal</th>
-        <th>Rederi</th>
-        <th>Detalj</th>
+        <th>Rederi/Eier</th>
+        <th>Vis</th>
       </tr>
     </thead>
     <tbody>
     <?php foreach ($rows as $r): ?>
       <tr>
-        <td><?php echo htmlspecialchars($r['TypeFork'] ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($r['FartNavn'] ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($r['RegHavn'] ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($r['Nasjon'] ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($r['Bygget'] ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($r['Kallesignal'] ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($r['Rederi'] ?? ''); ?></td>
-        <td><a href="fartoydetaljer.php?id=<?php echo (int)$r['FartObj_ID']; ?>">Vis</a></td>
+        <td><?= h(val($r,'TypeFork')) ?></td>
+        <td>
+          <?= h(val($r,'FartNavn')) ?>
+          <?php if ((int)val($r,'IsOriginalNow',0) === 1): ?>
+            <span title="Navnet tilhører opprinnelig fartøy">•</span>
+          <?php endif; ?>
+        </td>
+        <td><?= h(val($r,'RegHavn')) ?></td>
+        <td><?= h(val($r,'Nasjon')) ?></td>
+        <td><?= h(val($r,'Bygget')) ?></td>
+        <td><?= h(val($r,'Kallesignal')) ?></td>
+        <td><?= h(val($r,'Rederi')) ?></td>
+        <td>
+          <?php $id = (int)val($r,'FartObj_ID',0); ?>
+          <?php if ($id > 0): ?>
+            <a href="fartoydetaljer.php?obj_id=<?= (int)$r['FartObj_ID'] ?>&navn_id=<?= (int)$r['FartNavn_ID'] ?>">Vis</a>
+          <?php else: ?>
+            <span class="muted">–</span>
+          <?php endif; ?>
+        </td>
       </tr>
     <?php endforeach; ?>
     </tbody>
   </table>
-<?php elseif ($_GET): ?>
-  <p>Ingen treff.</p>
-<?php else: ?>
-  <p>Velg nasjon og/eller skriv del av navn for å søke.</p>
-<?php endif; ?>
+  <?php elseif ($doSearch): ?>
+    <p>Ingen treff.</p>
+  <?php else: ?>
+    <p>Velg nasjon og/eller skriv del av navn for å søke.</p>
+  <?php endif; ?>
 </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

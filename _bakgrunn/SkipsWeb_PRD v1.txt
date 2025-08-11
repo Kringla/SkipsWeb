@@ -50,6 +50,7 @@ Kun lesetilgang
 Ferdig testet
 
 # TRINN 3 – Utseende og justeringer
-Justere spørrelogikk i fartoy_nat.php og fatoydetaljer.php
+Strukturering av siten
+Definisjon av søk
 Utseende landingsside
 CSS utvikling

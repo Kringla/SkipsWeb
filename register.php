@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <form method="post" action="">
-    <input type="email" name="email" required placeholder="E-post">
-    <input type="password" name="password" required placeholder="Passord">
-    <button type="submit">Registrer administrator</button>
+    <input type="email" name="email" required placeholder="E-post" class="input">
+    <input type="password" name="password" required placeholder="Passord" class="input">
+    <button type="submit" class="btn primary">Registrer administrator</button>
 </form>

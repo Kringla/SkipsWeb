@@ -1,13 +1,19 @@
-<?php ?>
-<nav class="main-menu">
-    <ul>
-        <li><a href="<?= BASE_URL ?>/dashboard.php">Dashboard</a></li>
-        <li><a href="<?= BASE_URL ?>/user/fartoy_nat.php">Søk i nasjons fartøy</a></li>
-        <li><a href="<?= BASE_URL ?>/user/fartoy_test.php">Test søk i fartøy</a></li>
-        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-            <li><a href="#">Administrer Data</a></li>
-            <li><a href="#">Brukeradministrasjon</a></li>
-        <?php endif; ?>
-        <li><a href="<?= BASE_URL ?>/logout.php">Logg ut</a></li>
-    </ul>
+<?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+
+if (!defined('BASE_URL')) {
+  // BASE_URL should be defined in your config/constants and point to your web root for SkipsWeb (e.g. /skipsweb)
+  // We intentionally avoid guessing to prevent broken links from subfolders.
+  throw new \RuntimeException('BASE_URL is not defined. Define it (e.g. /skipsweb) before including menu.php.');
+}
+$BASE = rtrim(BASE_URL, '/');
+?>
+<nav class="container navbar">
+  <a href="<?= $BASE ?>/dashboard.php">Dashboard</a>
+  <a href="<?= $BASE ?>/user/fartoy_nat.php">Søk fartøy</a>
+  <?php if (!empty($_SESSION['user_id'])): ?>
+    <a href="<?= $BASE ?>/logout.php">Logg ut</a>
+  <?php else: ?>
+    <a href="<?= $BASE ?>/login.php">Logg inn</a>
+  <?php endif; ?>
 </nav>

@@ -24,9 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- HTML-skjema -->
 <form method="POST" action="">
-    <input type="email" name="email" placeholder="E-post" required>
-    <input type="password" name="password" placeholder="Passord" required>
-    <button type="submit">Logg inn</button>
+    <input type="email" name="email" placeholder="E-post" required class="input">
+    <input type="password" name="password" placeholder="Passord" required class="input">
+    <button type="submit" class="btn primary">Logg inn</button>
 </form>
 
 <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>

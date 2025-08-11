@@ -25,8 +25,6 @@ include __DIR__ . '/includes/menu.php';
     <?php else: ?>
         <p>Som vanlig bruker kan du søke i og lese data.</p>
     <?php endif; ?>
-
-    <p><a href="<?= BASE_URL ?>/user/search_fartoy.php">Finn fartøy</a></p>
 </div>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
