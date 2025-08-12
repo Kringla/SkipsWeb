@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../includes/bootstrap.php'; // $conn (mysqli)
+require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/auth.php'; // ok å ha med for meny/rolle
 
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
