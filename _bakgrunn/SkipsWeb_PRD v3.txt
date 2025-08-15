@@ -20,7 +20,7 @@ Du er min rådgiver og gir anbefalinger om utviklingsprosessen.
 Du er den som utvikler koden som er nødvendig for at prosjektets mål blir nådd.
 
 RESSURSRAMMEBETINGELSER:
-DB ligger på et Webhotell. Webhotellet har MySQL ver 8.3.28 og støtter Croon.
+DB ligger på et Webhotell. Webhotellet har MySQL ver 8.3.28 og støtter Cron.
 Jeg har en MSc i "Design of Information Systems" fra 1980. Jeg har utviklet applikajoner i og kan lese VBA kode. Jeg har god erfaring med design av Relasjonsdatabaser.
 * Jeg har tilgjengelig VB Studio Code, Notebook++, Access, phpMySQL ver 5.2.2, MySQL Workbench ver 8.0 CE og Laragon
 DB har et Schema som angitt i vedlagt "SkipsWeb.sql" fil.
@@ -53,4 +53,4 @@ Ferdig testet
 Strukturering av siten
 Definisjon av søk
 Utseende landingsside
-CSS utvikling
+CSS utvikling.

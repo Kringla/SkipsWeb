@@ -1,10 +1,15 @@
+# public_html/.htaccess
 Options -Indexes
-RewriteEngine On
+DirectoryIndex index.php
 
-# Tillat PHP-filer
-<FilesMatch "\.php$">
-  Require all granted
-</FilesMatch>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # La ekte filer/mapper passere
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  # Hvis du IKKE har en "front controller", kommenter ut neste linje:
+  # RewriteRule . index.php [L]
+</IfModule>
 
-# (Hvis du IKKE bruker front-controller, ikke sett RewriteRule til index.php)
 
